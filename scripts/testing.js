@@ -19,5 +19,3 @@ console.log(transaction);*/
 }
 
 getNFts();
-
-
