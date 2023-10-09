@@ -1,6 +1,7 @@
 import Navbar from "./Navbar";
 import { useState } from "react";
-import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
+// import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
+import { pinFileToIPFS, uploadJSONToIPFS } from "../testpinata";
 import Marketplace from '../Marketplace.json';
 import { useLocation } from "react-router";
 
@@ -27,13 +28,15 @@ export default function SellNFT () {
 
     //This function uploads the NFT image to IPFS
     async function OnChangeFile(e) {
-        var file = e.target.files[0];
+        // var file = e.target.files[0];
+        var src = e.target.files[0];
         //check for file extension
         try {
             //upload the file to IPFS
             disableButton();
             updateMessage("Uploading image.. please dont click anything!")
-            const response = await uploadFileToIPFS(file);
+            // const response = await uploadFileToIPFS(file);
+            const response = await pinFileToIPFS(src);
             if(response.success === true) {
                 enableButton();
                 updateMessage("")
