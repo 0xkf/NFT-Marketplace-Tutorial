@@ -7,15 +7,14 @@ console.log(JWT)
 console.log("testpinata start");
 
 
-export const pinFileToIPFS = async (src) => {
+export const pinFileToIPFS = async (selectedFile) => {
     console.log("222");
     const formData = new FormData();
   
     // const src = "src/title.png";
-    
-    
-    const file = fs.createReadStream(src)
-    formData.append('file', file)
+    // const file = fs.createReadStream(src)
+
+    formData.append('file', selectedFile)
     
     const pinataMetadata = JSON.stringify({
       name: 'File name',
@@ -36,8 +35,16 @@ export const pinFileToIPFS = async (src) => {
         }
       });
       console.log(res.data);
+      return {
+        success: true,
+        pinataURL: "https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash
+      };
     } catch (error) {
       console.log(error);
+      return {
+        success: false,
+        message: error.message,
+    };
     }
 }
 
@@ -47,8 +54,8 @@ export const uploadJSONToIPFS = async(JSONBody) => {
   return axios 
       .post(url, JSONBody, {
           headers: {
-              pinata_api_key: key,
-              pinata_secret_api_key: secret,
+              pinata_api_key: process.env.KEY,
+              pinata_secret_api_key: process.env.SECRET,
           }
       })
       .then(function (response) {
