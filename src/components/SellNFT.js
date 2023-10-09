@@ -1,9 +1,10 @@
 import Navbar from "./Navbar";
 import { useState } from "react";
 // import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
-import { pinFileToIPFS, uploadJSONToIPFS } from "../testpinata";
+import { pinFileToIPFS, uploadJSONToIPFS, pinJSONToIPFS } from "../testpinata";
 import Marketplace from '../Marketplace.json';
 import { useLocation } from "react-router";
+
 
 export default function SellNFT () {
     const [formParams, updateFormParams] = useState({ name: '', description: '', price: ''});
@@ -29,14 +30,14 @@ export default function SellNFT () {
     //This function uploads the NFT image to IPFS
     async function OnChangeFile(e) {
         // var file = e.target.files[0];
-        var src = e.target.files[0];
+        var selectedFile = e.target.files[0];
         //check for file extension
         try {
             //upload the file to IPFS
             disableButton();
             updateMessage("Uploading image.. please dont click anything!")
             // const response = await uploadFileToIPFS(file);
-            const response = await pinFileToIPFS(src);
+            const response = await pinFileToIPFS(selectedFile);
             if(response.success === true) {
                 enableButton();
                 updateMessage("")
@@ -65,14 +66,18 @@ export default function SellNFT () {
 
         try {
             //upload the metadata JSON to IPFS
-            const response = await uploadJSONToIPFS(nftJSON);
+            // const response = await uploadJSONToIPFS(nftJSON);
+            const response = await pinJSONToIPFS(nftJSON);
+                // console.log("Response from uploadJSONToIPFS:", response);
+                console.log("Response from pinJSONToIPFS:", response);
             if(response.success === true){
                 console.log("Uploaded JSON to Pinata: ", response)
                 return response.pinataURL;
             }
         }
         catch(e) {
-            console.log("error uploading JSON metadata:", e)
+            // console.log("error uploading JSON metadata:", e);
+            console.log("Error during JSON metadata upload:", e.message, e.stack);
         }
     }
 
@@ -81,26 +86,49 @@ export default function SellNFT () {
 
         //Upload data to IPFS
         try {
+    
             const metadataURL = await uploadMetadataToIPFS();
+            await console.log(metadataURL.name);
+            await console.log(metadataURL.price);
+            await console.log(metadataURL.description);
+            await console.log(metadataURL.fileURL);
+            await console.log(metadataURL.image);
+
             if(metadataURL === -1)
-                return;
+                return 
+                await console.log(metadataURL.name);
+                await console.log(metadataURL.price);
+                await console.log(metadataURL.description);
+                await console.log(metadataURL.fileURL);
+                await console.log(metadataURL.image);
+                console.log("metadataURL=-1");
+
+
             //After adding your Hardhat network to your metamask, this code will get providers and signers
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             const signer = provider.getSigner();
+            console.log("signer is " + signer)
             disableButton();
+            console.log("button disabled");
             updateMessage("Uploading NFT(takes 5 mins).. please dont click anything!")
 
             //Pull the deployed contract instance
+            console.log(Marketplace.address)
             let contract = new ethers.Contract(Marketplace.address, Marketplace.abi, signer)
+            console.log("contract signing");
 
             //massage the params to be sent to the create NFT request
             const price = ethers.utils.parseUnits(formParams.price, 'ether')
+            console.log("price is" + price);
             let listingPrice = await contract.getListPrice()
             listingPrice = listingPrice.toString()
+            console.log("listingPrice is" + listingPrice);
 
             //actually create the NFT
             let transaction = await contract.createToken(metadataURL, price, { value: listingPrice })
             await transaction.wait()
+
+            console.log("transaction is " + transaction);
 
             alert("Successfully listed your NFT!");
             enableButton();

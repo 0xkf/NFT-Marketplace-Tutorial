@@ -75,4 +75,47 @@ export const uploadJSONToIPFS = async(JSONBody) => {
 };
 
 
+export const pinJSONToIPFS = async (jsonObject) => {
+  console.log("Uploading JSON to IPFS...");
+
+  const jsonData = JSON.stringify(jsonObject);
+
+  const formData = new FormData();
+  const blob = new Blob([jsonData], { type: 'application/json' });
+  formData.append('file', blob, 'filename.json');
+
+  const pinataMetadata = JSON.stringify({
+    name: 'JSON file name',
+  });
+  formData.append('pinataMetadata', pinataMetadata);
+
+  const pinataOptions = JSON.stringify({
+    cidVersion: 0,
+  });
+  formData.append('pinataOptions', pinataOptions);
+
+  try {
+    const res = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+      maxBodyLength: "Infinity",
+      headers: {
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+        Authorization: JWT
+      }
+    });
+    console.log(res.data);
+    return {
+      success: true,
+      pinataURL: "https://gateway.pinata.cloud/ipfs/" + res.data.IpfsHash
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message: error.message,
+    };
+  }
+}
+
+
+
 // pinFileToIPFS();
