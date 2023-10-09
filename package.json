@@ -8,7 +8,8 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
-    "fs": "*",
+    "browserify-fs": "^1.0.0",
+    "fs": "^0.0.1-security",
     "path-browserify": "^1.0.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -43,6 +44,7 @@
     ]
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^1.1.1",
     "@nomiclabs/hardhat-ethers": "^2.0.6",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "assert": "^2.0.0",
