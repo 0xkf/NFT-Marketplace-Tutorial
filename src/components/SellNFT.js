@@ -1,7 +1,6 @@
 import Navbar from "./Navbar";
 import { useState } from "react";
-// import { uploadFileToIPFS, uploadJSONToIPFS } from "../pinata";
-import { pinFileToIPFS, uploadJSONToIPFS, pinJSONToIPFS } from "../testpinata";
+import { pinFileToIPFS, pinJSONToIPFS } from "../testpinata";
 import Marketplace from '../Marketplace.json';
 import { useLocation } from "react-router";
 
@@ -66,9 +65,7 @@ export default function SellNFT () {
 
         try {
             //upload the metadata JSON to IPFS
-            // const response = await uploadJSONToIPFS(nftJSON);
             const response = await pinJSONToIPFS(nftJSON);
-                // console.log("Response from uploadJSONToIPFS:", response);
                 console.log("Response from pinJSONToIPFS:", response);
             if(response.success === true){
                 console.log("Uploaded JSON to Pinata: ", response)
