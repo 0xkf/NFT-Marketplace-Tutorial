@@ -48,31 +48,31 @@ export const pinFileToIPFS = async (selectedFile) => {
     }
 }
 
-export const uploadJSONToIPFS = async(JSONBody) => {
-  const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
-  //making axios POST request to Pinata ⬇️
-  return axios 
-      .post(url, JSONBody, {
-          headers: {
-              pinata_api_key: process.env.KEY,
-              pinata_secret_api_key: process.env.SECRET,
-          }
-      })
-      .then(function (response) {
-         return {
-             success: true,
-             pinataURL: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
-         };
-      })
-      .catch(function (error) {
-          console.log(error)
-          return {
-              success: false,
-              message: error.message,
-          }
+// export const uploadJSONToIPFS = async(JSONBody) => {
+//   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
+//   //making axios POST request to Pinata ⬇️
+//   return axios 
+//       .post(url, JSONBody, {
+//           headers: {
+//               pinata_api_key: process.env.KEY,
+//               pinata_secret_api_key: process.env.SECRET,
+//           }
+//       })
+//       .then(function (response) {
+//          return {
+//              success: true,
+//              pinataURL: "https://gateway.pinata.cloud/ipfs/" + response.data.IpfsHash
+//          };
+//       })
+//       .catch(function (error) {
+//           console.log(error)
+//           return {
+//               success: false,
+//               message: error.message,
+//           }
 
-  });
-};
+//   });
+// };
 
 
 export const pinJSONToIPFS = async (jsonObject) => {
